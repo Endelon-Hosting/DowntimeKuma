@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 
 using Monitor = DowntimeKuma.Core.DowntimeKuma.Monitor;
@@ -76,11 +77,7 @@ namespace DowntimeKuma
 
         public static MonitorData GetLatestMonitorData(Monitor monitor)
         {
-            return new MonitorData()
-            {
-                Success = false,
-                Error = ""
-            };
+            return monitor.GetHistory().Last();
         }
 
         public static AbstractMonitorModule[] GetModules()
@@ -96,6 +93,18 @@ namespace DowntimeKuma
             lock(MonitorConfigurations)
             {
                 MonitorConfigurations.Add(monitor);
+            }
+        }
+
+        public static void UpdateMonitor(Monitor monitor)
+        {
+            lock(MonitorConfigurations)
+            {
+                var select = MonitorConfigurations.Find(x => x.Id == monitor.Id);
+
+                select.NotifyModules = monitor.NotifyModules;
+                select.MonitoringModule = monitor.MonitoringModule;
+                select.Name = monitor.Name;
             }
         }
     }
