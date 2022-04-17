@@ -1,3 +1,6 @@
 {
-
+  "firststart": false,
+  "username": "admin",
+  "password": "changeme",
+  "label": "Testy"
 }

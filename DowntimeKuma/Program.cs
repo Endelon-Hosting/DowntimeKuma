@@ -3,10 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Logging.Net;
 
 namespace DowntimeKuma
 {
@@ -14,6 +11,10 @@ namespace DowntimeKuma
     {
         public static void Main(string[] args)
         {
+            Logger.UsedLogger = new Logging.Net.Spectre.SpectreLogger();
+
+            DKControll.Start();
+
             CreateHostBuilder(args).Build().Run();
         }
 
