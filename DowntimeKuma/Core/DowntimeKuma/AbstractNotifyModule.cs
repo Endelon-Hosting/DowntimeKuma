@@ -2,6 +2,6 @@
 {
     public abstract class AbstractNotifyModule : AbstractModule
     {
-        public abstract void Notify(Notification notification);
+        public abstract void Notify(Notification notification, MonitorData change);
     }
 }
