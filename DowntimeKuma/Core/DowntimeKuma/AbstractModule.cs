@@ -4,5 +4,6 @@
     {
         public abstract void Prepare();
         public abstract string Id { get; }
+        public abstract string DisplayName { get; }
     }
 }
