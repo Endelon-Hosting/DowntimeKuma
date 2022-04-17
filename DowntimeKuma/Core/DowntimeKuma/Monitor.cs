@@ -63,7 +63,7 @@ namespace DowntimeKuma.Core.DowntimeKuma
         public static byte[] Compress(byte[] data)
         {
             MemoryStream output = new();
-            using (DeflateStream dstream = new(output, CompressionLevel.Optimal))
+            using (DeflateStream dstream = new(output, CompressionMode.Compress))
             {
                 dstream.Write(data, 0, data.Length);
             }
