@@ -182,10 +182,15 @@ namespace DowntimeKuma
         {
             lock(Monitors)
             {
-                return new AbstractMonitorModule[]
-                {
-                    new PingModule()
-                };
+                return Monitors.ToArray();
+            }
+        }
+
+        public static void AddMonitor(Monitor monitor)
+        {
+            lock(MonitorConfigurations)
+            {
+                MonitorConfigurations.Add(monitor);
             }
         }
     }

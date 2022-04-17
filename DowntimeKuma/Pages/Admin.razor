@@ -119,16 +119,20 @@ if (createMonitor != null)
                 <div class="row">
                     <div class="form-group">
                         <label class="form-control-label">Name</label>
-                        <input class="form-control" type="text" />
+                        <input class="form-control" type="text" @bind-value="createMonitor.Name" />
                         <label class="form-control-label">Monitor Type</label>
-                        <select class="form-control">
-                            @foreach(var m in DKControll.GetModules())
+                        <select class="form-control" @bind="createMonitor.MonitoringModule">
+                            @foreach (var m in DKControll.GetModules())
                             {
                                 <option value="@(m.Id)">@(m.DisplayName)</option>
                             }
                         </select>
                         <label class="form-control-label">Target</label>
-                        <input class="form-control" type="text" />
+                        <input class="form-control" type="text" @bind-value="createMonitor.Target" />
+                    </div>
+                    <div class="btn-group-sm">
+                        <button class="btn btn-success" @onclick="CreateMonitor">Create</button>
+                        <button class="btn btn-danger" @onclick="CloseCreateDialog">Cancle</button>
                     </div>
                 </div>
             </div>
@@ -151,8 +155,14 @@ if (createMonitor != null)
             };
     }
 
+    private void CreateMonitor()
+    {
+        DKControll.AddMonitor(createMonitor);
+        CloseCreateDialog();
+    }
+
     private void CloseCreateDialog()
     {
-
+        createMonitor = null;
     }
 }
