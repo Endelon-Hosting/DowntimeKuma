@@ -56,7 +56,7 @@ namespace DowntimeKuma
             {
                 foreach (var mon in MonitorConfigurations)
                 {
-
+                    mon.AddToHistory(mon.GetMonitoringService().Monitor(mon));
                 }
                 Thread.Sleep(1000 * 60);
             }
@@ -66,105 +66,10 @@ namespace DowntimeKuma
         {
             var result = new Dictionary<Monitor, MonitorData[]>();
 
-            result.Add(new Monitor()
+            foreach (var monitor in MonitorConfigurations)
             {
-                MonitoringModule = "ping",
-                Name = "Testy",
-                NotifyModules = new(),
-                Target = "test.xyz.de"
-            }, new MonitorData[]
-            {
-                new MonitorData()
-                {
-                    Error = "Uptimekuma is down",
-                    Success = false
-                },
-                new MonitorData()
-                {
-                    Error = "",
-                    Success = true
-                },
-                new MonitorData()
-                {
-                    Error = "",
-                    Success = true
-                },
-                new MonitorData()
-                {
-                    Error = "",
-                    Success = true
-                },
-                new MonitorData()
-                {
-                    Error = "",
-                    Success = false
-                }
-            });
-
-            result.Add(new Monitor()
-            {
-                MonitoringModule = "ping",
-                Name = "Uptimekuma",
-                NotifyModules = new(),
-                Target = "test.xyz.de"
-            }, new MonitorData[]
-            {
-                new MonitorData()
-                {
-                    Error = "Uptimekuma is down",
-                    Success = false
-                },
-                new MonitorData()
-                {
-                    Error = "",
-                    Success = false
-                },
-                new MonitorData()
-                {
-                    Error = "",
-                    Success = false
-                },
-                new MonitorData()
-                {
-                    Error = "",
-                    Success = false
-                },
-                new MonitorData()
-                {
-                    Error = "",
-                    Success = false
-                },
-                new MonitorData()
-                {
-                    Error = "",
-                    Success = false
-                },
-                new MonitorData()
-                {
-                    Error = "",
-                    Success = false
-                },
-                new MonitorData()
-                {
-                    Error = "",
-                    Success = false
-                },
-                new MonitorData()
-                {
-                    Error = "",
-                    Success = false
-                },
-                new MonitorData()
-                {
-                    Error = "",
-                    Success = false
-                },
-                new MonitorData()
-                {
-                    Error = "",
-                    Success = false
-                }
-            });
+                result.Add(monitor, monitor.GetHistory());
+            }
 
             return result;
         }

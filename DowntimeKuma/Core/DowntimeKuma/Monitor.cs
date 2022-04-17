@@ -2,6 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using System.Text;
 
 namespace DowntimeKuma.Core.DowntimeKuma
 {
@@ -39,13 +42,41 @@ namespace DowntimeKuma.Core.DowntimeKuma
         public string JX(string fn, string m = "{}")
         {
             if (!File.Exists(fn))
-                File.WriteAllText(fn, m);
+                File.WriteAllBytes(fn, Compress(Encoding.UTF8.GetBytes(m)));
             return fn;
         }
 
         public MonitorData[] GetHistory()
         {
-            return JsonConvert.DeserializeObject<MonitorData[]>(File.ReadAllText(JX(XD(DailyStatsPath()), "[]")));
+            return JsonConvert.DeserializeObject<MonitorData[]>(Encoding.UTF8.GetString(Decompress(File.ReadAllBytes(JX(XD(DailyStatsPath()), "[]")))));
+        }
+
+        public void AddToHistory(MonitorData d)
+        {
+            var x = JsonConvert.DeserializeObject<MonitorData[]>(File.ReadAllText(JX(XD(DailyStatsPath()), "[]"))).ToList();
+            x.Add(d);
+            File.WriteAllBytes(DailyStatsPath(), Compress(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(x.ToArray(), Formatting.Indented))));
+        }
+
+        public static byte[] Compress(byte[] data)
+        {
+            MemoryStream output = new();
+            using (DeflateStream dstream = new(output, CompressionLevel.Optimal))
+            {
+                dstream.Write(data, 0, data.Length);
+            }
+            return output.ToArray();
+        }
+
+        public static byte[] Decompress(byte[] data)
+        {
+            MemoryStream input = new(data);
+            MemoryStream output = new();
+            using (DeflateStream dstream = new(input, CompressionMode.Decompress))
+            {
+                dstream.CopyTo(output);
+            }
+            return output.ToArray();
         }
     }
 }
