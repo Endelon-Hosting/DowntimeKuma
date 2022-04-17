@@ -1,1 +1,86 @@
 ﻿@page "/admin"
+
+
+
+<div class="row">
+    <div class="card">
+        <div class="card-header">
+            <h4>Current Status</h4>
+        </div>
+        <div class="card-body">
+            @{
+                var data = DKControll.GetCurrentMonitorStates(); // TODO: Update with monitor thread
+            }
+
+            @if (data.Keys.Count > 0)
+            {
+                foreach (var monitor in data.Keys)
+                {
+                    <div class="mb-3 card bg-cover card-body">
+                        <div class="row row-cols-auto">
+                            <div class="pt-5 col-sm-1">
+                                <div class="icon icon-shape me-3 bg-gradient-dark shadow text-center">
+                                    <i class="bx bx-server text-white opacity-10"></i>
+                                </div>
+                            </div>
+                            <div class="pt-5 col-sm-4">
+                                <h6 class="mb-1 text-dark h5">@(monitor.Name)</h6>
+
+                                @{
+                                    var latestData = DKControll.GetLatestMonitorData(monitor);
+                                }
+
+                                <b class="text-@(latestData == null ? "muted" : (latestData.Success ? "success": "danger"))">
+                                    @(latestData == null ? "Unknown" : (latestData.Success ? "Online": "Offline"))
+                                </b>
+                            </div>
+                            <div class="pt-3 col-sm-6">
+                                <div class="card bg-cover">
+                                    <div class="card-body">
+                                        <div class="ms-5 row">
+                                            @{
+                                                var historyData = data[monitor];
+
+                                                if (historyData.Length > 0)
+                                                {
+                                                    for (int i = 0; i < 20 - historyData.Length; i++)
+                                                    {
+                                                        <div class="ms-2 mt-2 icon icon-shape bg-dark shadow text-center w-1">
+                                                        </div>
+                                                    }
+
+                                                    foreach (var hd in historyData)
+                                                    {
+                                                        <div class="ms-2 mt-2 icon icon-shape bg-@(hd.Success ? "success": "danger") shadow text-center w-1">
+                                                        </div>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    @for (int i = 0; i < 20; i++)
+                                                    {
+                                                        <div class="ms-2 mt-2 icon icon-shape bg-dark shadow text-center w-1">
+                                                        </div>
+                                                    }
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <button class="btn btn-link btn-icon-only btn-rounded btn-sm text-dark icon-move-right my-auto"><i class="ni ni-bold-right" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    Sadly, there are no monitors to look at 😞
+                </div>
+            }
+        </div>
+    </div>
+</div>

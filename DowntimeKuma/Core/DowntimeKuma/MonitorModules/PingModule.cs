@@ -1,14 +1,15 @@
 ﻿using Logging.Net;
 
 using System;
-using System.Net;
 using System.Net.NetworkInformation;
 
 namespace DowntimeKuma.Core.DowntimeKuma.MonitorModules
 {
     public class PingModule : AbstractMonitorModule
     {
-        public override string Id { get { return "ping"; } }
+        public override string Id => "ping";
+
+        public override string DisplayName => "ICMP Ping";
 
         public override MonitorData Monitor(Monitor m)
         {

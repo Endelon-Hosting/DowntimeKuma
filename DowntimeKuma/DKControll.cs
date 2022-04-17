@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 
+using Monitor = DowntimeKuma.Core.DowntimeKuma.Monitor;
+
 namespace DowntimeKuma
 {
     public class DKControll
@@ -52,6 +54,122 @@ namespace DowntimeKuma
             {
                 Thread.Sleep(1000 * 60);
             }
+        }
+
+        public static Dictionary<Monitor, MonitorData[]> GetCurrentMonitorStates()
+        {
+            var result = new Dictionary<Monitor, MonitorData[]>();
+
+            result.Add(new Monitor()
+            {
+                MonitoringModule = "ping",
+                Name = "Testy",
+                NotifyModules = new(),
+                Target = "test.xyz.de"
+            }, new MonitorData[]
+            {
+                new MonitorData()
+                {
+                    Error = "Uptimekuma is down",
+                    Success = false
+                },
+                new MonitorData()
+                {
+                    Error = "",
+                    Success = true
+                },
+                new MonitorData()
+                {
+                    Error = "",
+                    Success = true
+                },
+                new MonitorData()
+                {
+                    Error = "",
+                    Success = true
+                },
+                new MonitorData()
+                {
+                    Error = "",
+                    Success = false
+                }
+            });
+
+            result.Add(new Monitor()
+            {
+                MonitoringModule = "ping",
+                Name = "Uptimekuma",
+                NotifyModules = new(),
+                Target = "test.xyz.de"
+            }, new MonitorData[]
+            {
+                new MonitorData()
+                {
+                    Error = "Uptimekuma is down",
+                    Success = false
+                },
+                new MonitorData()
+                {
+                    Error = "",
+                    Success = false
+                },
+                new MonitorData()
+                {
+                    Error = "",
+                    Success = false
+                },
+                new MonitorData()
+                {
+                    Error = "",
+                    Success = false
+                },
+                new MonitorData()
+                {
+                    Error = "",
+                    Success = false
+                },
+                new MonitorData()
+                {
+                    Error = "",
+                    Success = false
+                },
+                new MonitorData()
+                {
+                    Error = "",
+                    Success = false
+                },
+                new MonitorData()
+                {
+                    Error = "",
+                    Success = false
+                },
+                new MonitorData()
+                {
+                    Error = "",
+                    Success = false
+                },
+                new MonitorData()
+                {
+                    Error = "",
+                    Success = false
+                },
+                new MonitorData()
+                {
+                    Error = "",
+                    Success = false
+                }
+            });
+
+            return result;
+        }
+
+        public static MonitorData GetLatestMonitorData(Monitor monitor)
+        {
+            return new MonitorData()
+            {
+                Success = false,
+                Error = ""
+            };
         }
     }
 }
