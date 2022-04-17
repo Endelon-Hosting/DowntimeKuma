@@ -1,5 +1,7 @@
 ﻿using DowntimeKuma.Core.Config;
 using DowntimeKuma.Core.DowntimeKuma;
+using DowntimeKuma.Core.DowntimeKuma.MonitorModules;
+
 using Logging.Net;
 
 using Newtonsoft.Json;
@@ -170,6 +172,17 @@ namespace DowntimeKuma
                 Success = false,
                 Error = ""
             };
+        }
+
+        public static AbstractMonitorModule[] GetModules()
+        {
+            lock(Monitors)
+            {
+                return new AbstractMonitorModule[]
+                {
+                    new PingModule()
+                };
+            }
         }
     }
 }
