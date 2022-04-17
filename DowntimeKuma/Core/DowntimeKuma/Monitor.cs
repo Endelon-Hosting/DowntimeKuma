@@ -10,9 +10,11 @@ namespace DowntimeKuma.Core.DowntimeKuma
 {
     public class Monitor
     {
+        private static int _id = 0;
         public string MonitoringModule { get; set; }
         public string Name { get; set; }
         public string Target { get; set; }
+        public int Id { get; set; } = _id++;
         public List<string> NotifyModules { get; set; } = new();
 
         public AbstractMonitorModule GetMonitoringService()
