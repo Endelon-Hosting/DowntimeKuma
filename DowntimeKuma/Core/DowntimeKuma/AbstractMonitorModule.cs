@@ -2,6 +2,6 @@
 {
     public abstract class AbstractMonitorModule : AbstractModule
     {
-        public abstract MonitorData Monitor();
+        public abstract MonitorData Monitor(Monitor m);
     }
 }
