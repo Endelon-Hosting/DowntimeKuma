@@ -14,13 +14,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@(DKControll.Configuration.Label) - DowntimeKuma</title>
     <base href="~/" />
-
     <meta name="title" content="@(DKControll.Configuration.Label) - DowntimeKuma">
     <meta name="description" content="Monitor your services using DowntimeKuma">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+
+    <link rel="icon" type="image/png" href="/assets/img/favicon.png">
+    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <link id="pagestyle" href="/assets/css/argon-dashboard.css?v=2.0.2" rel="stylesheet">
 </head>
-<body>
+<body class="g-sidenav-show bg-gray-100">
     <component type="typeof(App)" render-mode="ServerPrerendered" />
 
     <script src="_framework/blazor.server.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="/assets/js/core/popper.min.js"></script>
+    <script src="/assets/js/core/bootstrap.min.js"></script>
+    <script src="/assets/js/plugins/perfect-scrollbar.min.js"></script>
+    <script src="/assets/js/argon-dashboard.min.js"></script>
 </body>
 </html>
