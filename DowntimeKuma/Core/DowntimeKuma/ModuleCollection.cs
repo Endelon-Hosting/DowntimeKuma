@@ -99,5 +99,11 @@ namespace DowntimeKuma.Core.DowntimeKuma
             }
             return dic.GetEnumerator();
         }
+
+        public new void Add(T t)
+        {
+            t.Prepare();
+            base.Add(t);
+        }
     }
 }

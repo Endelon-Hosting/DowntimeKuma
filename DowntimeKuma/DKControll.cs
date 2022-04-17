@@ -1,5 +1,6 @@
 ﻿using DowntimeKuma.Core.Config;
 using DowntimeKuma.Core.DowntimeKuma;
+using DowntimeKuma.Core.DowntimeKuma.MonitorModules;
 using Logging.Net;
 
 using Newtonsoft.Json;
@@ -18,7 +19,7 @@ namespace DowntimeKuma
         public static Configuration Configuration { get; set; }
         public static ModuleCollection<AbstractMonitorModule> Monitors { get; set; }
         public static ModuleCollection<AbstractNotifyModule> Notifications { get; set; }
-        public static List<Core.DowntimeKuma.Monitor> MonitorConfigurations { get; set; }
+        public static List<Monitor> MonitorConfigurations { get; set; }
         public static Thread Monitoring { get; set; } = null;
 
         public static void Start()
@@ -32,6 +33,7 @@ namespace DowntimeKuma
 
                 Logger.Info("Registering modules");
                 Monitors = new();
+                Monitors.Add(new PingModule());
                 Notifications = new();
                 MonitorConfigurations = new();
 
@@ -52,6 +54,10 @@ namespace DowntimeKuma
         {
             while (true)
             {
+                foreach (var mon in MonitorConfigurations)
+                {
+
+                }
                 Thread.Sleep(1000 * 60);
             }
         }
