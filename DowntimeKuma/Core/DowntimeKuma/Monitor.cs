@@ -88,6 +88,7 @@ namespace DowntimeKuma.Core.DowntimeKuma
 
         public void UpdateConfig()
         {
+            Directory.CreateDirectory(PathX());
             File.WriteAllText(PathX() + "config.json", JsonConvert.SerializeObject(this, Formatting.Indented));
         }
 
