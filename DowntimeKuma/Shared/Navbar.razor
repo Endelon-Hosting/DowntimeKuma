@@ -46,11 +46,20 @@
                             <i class="bx bx-md bxs-megaphone fixed-plugin-button-nav"></i>
                         </a>
                     </div>
-                    <div class="col-auto m-auto">
-                        <a class="cursor-pointer" href="/admin">
-                            <i class="bx bx-md bxs-cog fixed-plugin-button-nav"></i>
-                        </a>
-                    </div>
+                    <IsAuth>
+                        <div class="col-auto m-auto">
+                            <a class="cursor-pointer" href="/admin">
+                                <i class="bx bx-md bxs-cog fixed-plugin-button-nav"></i>
+                            </a>
+                        </div>
+                    </IsAuth>
+                    <NonAuth>
+                        <div class="col-auto m-auto">
+                            <a class="cursor-pointer" href="/login">
+                                <i class="bx bx-md bx-log-in fixed-plugin-button-nav"></i>
+                            </a>
+                        </div>
+                    </NonAuth>
                 </div>
             </ul>
         </div>

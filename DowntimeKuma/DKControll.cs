@@ -22,6 +22,7 @@ namespace DowntimeKuma
         public static ModuleCollection<AbstractNotifyModule> Notifications { get; set; }
         public static List<Monitor> MonitorConfigurations { get; set; }
         public static Thread Monitoring { get; set; } = null;
+
         public static event Action StateHasChanged;
 
         public static void Start()
@@ -139,6 +140,11 @@ namespace DowntimeKuma
                 monitor.DeleteData();
                 MonitorConfigurations.Remove(MonitorConfigurations.Find(x => x.Id == monitor.Id));
             }
+        }
+
+        public static void SaveConfig()
+        {
+            File.WriteAllText("config.json", JsonConvert.SerializeObject(Configuration));
         }
     }
 }

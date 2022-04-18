@@ -1,0 +1,31 @@
+﻿@using S3
+@inject IS3Service s3
+
+@if(s3.HasSession)
+{
+    @if(s3.Storage.ContainsKey("auth"))
+    {
+        @if(s3.Storage.Get<bool>("auth"))
+        {
+            
+        }
+        else
+        {
+            @ChildContent
+        }
+    }
+    else
+    {
+        @ChildContent
+    }
+}
+else
+{
+    @ChildContent
+}
+
+@code
+{
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+}

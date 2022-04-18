@@ -1,182 +1,207 @@
 ﻿@page "/admin"
 
+@using S3
 @using DowntimeKuma.Core.DowntimeKuma
 
-<div class="row">
-    <div class="card">
-        <div class="card-header">
-            <h5>Actions</h5>
-        </div>
-        <div class="card-body">
-            <button class="btn btn-success" @onclick="OpenCreateDialog">Create Monitor</button>
-            <button class="btn btn-info" @onclick="ForceUpdate">Force Update</button>
-            <button class="btn btn-dark">Logout</button>
-        </div>
-    </div>
-</div>
+@inject IS3Service s3
+@inject NavigationManager nm
 
-@if (createMonitor == null && editMonitor == null)
-{
-    <div class="mt-3 row">
+<IsAuth>
+    <div class="row">
         <div class="card">
             <div class="card-header">
-                <h5>All Monitors</h5>
+                <h5>Actions</h5>
             </div>
             <div class="card-body">
-                @{
-                    var data = DKControll.GetCurrentMonitorStates(); // TODO: Update with monitor thread
-                }
+                <button class="btn btn-success" @onclick="OpenCreateDialog">Create Monitor</button>
+                <button class="btn btn-info" @onclick="ForceUpdate">Force Update</button>
+                <button class="btn btn-dark" @onclick="Logout">Logout</button>
+            </div>
+        </div>
+    </div>
 
-                @if (data.Keys.Count > 0)
-                {
-                    foreach (var monitor in data.Keys)
+    @if (createMonitor == null && editMonitor == null)
+    {
+        <div class="mt-3 row">
+            <div class="card">
+                <div class="card-header">
+                    <h5>All Monitors</h5>
+                </div>
+                <div class="card-body">
+                    @{
+                        var data = DKControll.GetCurrentMonitorStates(); // TODO: Update with monitor thread
+                    }
+
+                    @if (data.Keys.Count > 0)
                     {
-                        <div class="mb-3 card bg-cover card-body">
-                            <div class="row row-cols-auto">
-                                <div class="mt-5 col-sm-1">
-                                    <div class="icon icon-shape me-3 bg-gradient-dark shadow text-center">
-                                        <i class="bx bx-server text-white opacity-10"></i>
+                        foreach (var monitor in data.Keys)
+                        {
+                            <div class="mb-3 card bg-cover card-body">
+                                <div class="row row-cols-auto">
+                                    <div class="mt-5 col-sm-1">
+                                        <div class="icon icon-shape me-3 bg-gradient-dark shadow text-center">
+                                            <i class="bx bx-server text-white opacity-10"></i>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="mt-5 col-sm-4">
-                                    <h6 class="mb-1 text-dark h5">@(monitor.Name)</h6>
+                                    <div class="mt-5 col-sm-4">
+                                        <h6 class="mb-1 text-dark h5">@(monitor.Name)</h6>
 
-                                    @{
-                                        var latestData = DKControll.GetLatestMonitorData(monitor);
-                                    }
+                                        @{
+                                            var latestData = DKControll.GetLatestMonitorData(monitor);
+                                        }
 
-                                    <b class="text-@(latestData == null ? "muted" : (latestData.Success ? "success": "danger"))">
-                                        @(latestData == null ? "Unknown" : (latestData.Success ? "Online": "Offline"))
-                                    </b>
-                                </div>
-                                <div class="mt-3 col-sm-6">
-                                    <div class="card bg-cover">
-                                        <div class="card-body">
-                                            <div class="ms-5 row">
-                                                @{
-                                                    var historyData = data[monitor];
+                                        <b class="text-@(latestData == null ? "muted" : (latestData.Success ? "success": "danger"))">
+                                            @(latestData == null ? "Unknown" : (latestData.Success ? "Online": "Offline"))
+                                        </b>
+                                    </div>
+                                    <div class="mt-3 col-sm-6">
+                                        <div class="card bg-cover">
+                                            <div class="card-body">
+                                                <div class="ms-5 row">
+                                                    @{
+                                                        var historyData = data[monitor];
 
-                                                    if (historyData.Length > 0)
-                                                    {
-                                                        for (int i = 0; i < 20 - historyData.Length; i++)
+                                                        if (historyData.Length > 0)
                                                         {
-                                                            <div class="ms-2 mt-2 icon icon-shape bg-dark shadow text-center w-1">
-                                                            </div>
+                                                            for (int i = 0; i < 20 - historyData.Length; i++)
+                                                            {
+                                                                <div class="ms-2 mt-2 icon icon-shape bg-dark shadow text-center w-1">
+                                                                </div>
+                                                            }
+
+                                                            foreach (var hd in historyData)
+                                                            {
+                                                                <div class="ms-2 mt-2 icon icon-shape bg-@(hd.Success ? "success": "danger") shadow text-center w-1">
+                                                                </div>
+                                                            }
                                                         }
-
-                                                        foreach (var hd in historyData)
+                                                        else
                                                         {
-                                                            <div class="ms-2 mt-2 icon icon-shape bg-@(hd.Success ? "success": "danger") shadow text-center w-1">
-                                                            </div>
+                                                            @for (int i = 0; i < 20; i++)
+                                                            {
+                                                                <div class="ms-2 mt-2 icon icon-shape bg-dark shadow text-center w-1">
+                                                                </div>
+                                                            }
                                                         }
                                                     }
-                                                    else
-                                                    {
-                                                        @for (int i = 0; i < 20; i++)
-                                                        {
-                                                            <div class="ms-2 mt-2 icon icon-shape bg-dark shadow text-center w-1">
-                                                            </div>
-                                                        }
-                                                    }
-                                                }
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="mt-1 col">
-                                    <button class="btn btn-rounded text-dark" @onclick="() => OpenEditDialog(monitor)">
-                                        <i class="bx bx-md bx-edit"></i>
-                                    </button>
-                                    <br />
-                                    <button class="btn btn-rounded text-dark" @onclick="() => DeleteMonitor(monitor)">
-                                        <i class="bx bx-md bx-x"></i>
-                                    </button>
+                                    <div class="mt-1 col">
+                                        <button class="btn btn-rounded text-dark" @onclick="() => OpenEditDialog(monitor)">
+                                            <i class="bx bx-md bx-edit"></i>
+                                        </button>
+                                        <br />
+                                        <button class="btn btn-rounded text-dark" @onclick="() => DeleteMonitor(monitor)">
+                                            <i class="bx bx-md bx-x"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            Sadly, there are no monitors to look at 😞<br />
+                            But you can create one using the "Create Monitor" button
                         </div>
                     }
-                }
-                else
-                {
-                    <div class="alert alert-info">
-                        Sadly, there are no monitors to look at 😞<br />
-                        But you can create one using the "Create Monitor" button
-                    </div>
-                }
+                </div>
             </div>
         </div>
-    </div>
-}
-else
-if (createMonitor != null)
-{
-    <div class="mt-3 row">
-        <div class="card">
-            <div class="card-header">
-                <h5>Create Monitors</h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="form-group">
-                        <label class="form-control-label">Name</label>
-                        <input class="form-control" type="text" @bind-value="createMonitor.Name" />
-                        <label class="form-control-label">Monitor Type</label>
-                        <select class="form-control" @bind="createMonitor.MonitoringModule">
-                            <option selected="" value="none">Select monitor type</option>
-                            @foreach (var m in DKControll.GetModules())
-                            {
-                                <option value="@(m.Id)">@(m.DisplayName)</option>
-                            }
-                        </select>
-                        <label class="form-control-label">Target</label>
-                        <input class="form-control" type="text" @bind-value="createMonitor.Target" />
-                    </div>
-                    <div class="btn-group-sm">
-                        <button class="btn btn-success" @onclick="CreateMonitor">Create</button>
-                        <button class="btn btn-danger" @onclick="CloseCreateDialog">Cancle</button>
+    }
+    else
+    if (createMonitor != null)
+    {
+        <div class="mt-3 row">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Create Monitors</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="form-control-label">Name</label>
+                            <input class="form-control" type="text" @bind-value="createMonitor.Name" />
+                            <label class="form-control-label">Monitor Type</label>
+                            <select class="form-control" @bind="createMonitor.MonitoringModule">
+                                <option selected="" value="none">Select monitor type</option>
+                                @foreach (var m in DKControll.GetModules())
+                                {
+                                    <option value="@(m.Id)">@(m.DisplayName)</option>
+                                }
+                            </select>
+                            <label class="form-control-label">Target</label>
+                            <input class="form-control" type="text" @bind-value="createMonitor.Target" />
+                        </div>
+                        <div class="btn-group-sm">
+                            <button class="btn btn-success" @onclick="CreateMonitor">Create</button>
+                            <button class="btn btn-danger" @onclick="CloseCreateDialog">Cancle</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-}
-else
-if (editMonitor != null)
-{
-    <div class="mt-3 row">
-        <div class="card">
-            <div class="card-header">
-                <h5>Edit '@(editMonitor.Name)' Monitor</h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="form-group">
-                        <label class="form-control-label">Name</label>
-                        <input class="form-control" type="text" @bind-value="editMonitor.Name" />
-                        <label class="form-control-label">Monitor Type</label>
-                        <select class="form-select" @bind="editMonitor.MonitoringModule">
-                            @foreach (var m in DKControll.GetModules())
-                            {
-                                <option value="@(m.Id)">@(m.DisplayName)</option>
-                            }
-                        </select>
-                        <label class="form-control-label">Target</label>
-                        <input class="form-control" type="text" @bind-value="editMonitor.Target" />
-                    </div>
-                    <div class="btn-group-sm">
-                        <button class="btn btn-success" @onclick="UpdateMonitor">Update</button>
-                        <button class="btn btn-danger" @onclick="CloseEditDialog">Cancle</button>
+    }
+    else
+    if (editMonitor != null)
+    {
+        <div class="mt-3 row">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Edit '@(editMonitor.Name)' Monitor</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="form-control-label">Name</label>
+                            <input class="form-control" type="text" @bind-value="editMonitor.Name" />
+                            <label class="form-control-label">Monitor Type</label>
+                            <select class="form-select" @bind="editMonitor.MonitoringModule">
+                                @foreach (var m in DKControll.GetModules())
+                                {
+                                    <option value="@(m.Id)">@(m.DisplayName)</option>
+                                }
+                            </select>
+                            <label class="form-control-label">Target</label>
+                            <input class="form-control" type="text" @bind-value="editMonitor.Target" />
+                        </div>
+                        <div class="btn-group-sm">
+                            <button class="btn btn-success" @onclick="UpdateMonitor">Update</button>
+                            <button class="btn btn-danger" @onclick="CloseEditDialog">Cancle</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+    }
+</IsAuth>
+<NonAuth>
+    <div class="row">
+        <div class="card">
+            <div class="card-header">
+                <h5>You are not signed in</h5>
+            </div>
+            <div class="card-body">
+                <a class="btn btn-info" href="/login">Login</a>
+            </div>
+        </div>
     </div>
-}
-
+</NonAuth>
 @code
 {
     private Monitor createMonitor;
     private Monitor editMonitor;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            DKControll.StateHasChanged += () => InvokeAsync(StateHasChanged);
+        }
+    }
 
     private void OpenCreateDialog()
     {
@@ -228,5 +253,14 @@ if (editMonitor != null)
     private void ForceUpdate()
     {
         DKControll.Update();
+    }
+
+    private void Logout()
+    {
+        if(s3.HasSession)
+        {
+            S3Storage.Clear(s3.Token);
+            nm.NavigateTo("/login", true);
+        }
     }
 }
