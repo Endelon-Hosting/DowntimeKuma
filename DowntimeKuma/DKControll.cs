@@ -77,7 +77,7 @@ namespace DowntimeKuma
 
         public static MonitorData GetLatestMonitorData(Monitor monitor)
         {
-            return monitor.GetHistory().Last();
+            return monitor.GetHistory().LastOrDefault();
         }
 
         public static AbstractMonitorModule[] GetModules()
@@ -106,6 +106,11 @@ namespace DowntimeKuma
                 select.MonitoringModule = monitor.MonitoringModule;
                 select.Name = monitor.Name;
             }
+        }
+
+        public static void DeleteMonitor(Monitor monitor)
+        {
+
         }
     }
 }
