@@ -5,6 +5,16 @@
     Layout = null;
 
     Response.Headers.Add("Server", "DowntimeKuma");
+
+    bool whitemode = false;
+
+    if(Request.Cookies.ContainsKey("whitemode"))
+    {
+        if(Request.Cookies["whitemode"] == "enabled")
+        {
+            whitemode = true;
+        }
+    }
 }
 
 <!DOCTYPE html>
@@ -25,7 +35,7 @@
     <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
     <link id="pagestyle" href="/assets/css/argon-dashboard.css?v=2.0.2" rel="stylesheet">
 </head>
-<body class="g-sidenav-show bg-gray-100">
+<body class="@(whitemode ? "bg-gray-100" : "dark-version bg-gray-600")">
     <component type="typeof(App)" render-mode="ServerPrerendered" />
 
     <script src="_framework/blazor.server.js"></script>
@@ -34,5 +44,6 @@
     <script src="/assets/js/core/bootstrap.min.js"></script>
     <script src="/assets/js/plugins/perfect-scrollbar.min.js"></script>
     <script src="/assets/js/argon-dashboard.min.js"></script>
+    <script src="/assets/jsfixes/cookieutils.js"></script>
 </body>
 </html>

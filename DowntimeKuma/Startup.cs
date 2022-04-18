@@ -1,3 +1,5 @@
+using DowntimeKuma.S3;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
@@ -28,6 +30,8 @@ namespace DowntimeKuma
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddHttpContextAccessor();
+            services.AddScoped<IS3Service, S3Service>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
