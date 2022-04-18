@@ -112,5 +112,10 @@ namespace DowntimeKuma
                 select.Name = monitor.Name;
             }
         }
+
+        public static void DeleteMonitor(Monitor monitor)
+        {
+
+        }
     }
 }

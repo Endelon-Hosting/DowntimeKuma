@@ -9,7 +9,7 @@
         </div>
         <div class="card-body">
             <button class="btn btn-success" @onclick="OpenCreateDialog">Create Monitor</button>
-            <button class="btn btn-info">Force Update</button>
+            <button class="btn btn-info" @onclick="ForceUpdate">Force Update</button>
             <button class="btn btn-dark">Logout</button>
         </div>
     </div>
@@ -201,7 +201,7 @@ if(editMonitor != null)
 
     private void DeleteMonitor(Monitor monitor)
     {
-
+        DKControll.DeleteMonitor(monitor);
     }
 
     private void OpenEditDialog(Monitor monitor)
@@ -218,5 +218,10 @@ if(editMonitor != null)
     {
         DKControll.UpdateMonitor(editMonitor);
         CloseEditDialog();
+    }
+
+    private void ForceUpdate()
+    {
+        
     }
 }
