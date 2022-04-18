@@ -84,7 +84,7 @@
                                     </div>
                                 </div>
                                 <div class="mt-1 col">
-                                    <button class="btn btn-rounded text-dark">
+                                    <button class="btn btn-rounded text-dark" @onclick="() => OpenEditDialog(monitor)">
                                         <i class="bx bx-md bx-edit"></i>
                                     </button>
                                     <br />
@@ -122,6 +122,7 @@ if (createMonitor != null)
                         <input class="form-control" type="text" @bind-value="createMonitor.Name" />
                         <label class="form-control-label">Monitor Type</label>
                         <select class="form-control" @bind="createMonitor.MonitoringModule">
+                            <option selected="" value="none">Select monitor type</option>
                             @foreach (var m in DKControll.GetModules())
                             {
                                 <option value="@(m.Id)">@(m.DisplayName)</option>
@@ -140,7 +141,7 @@ if (createMonitor != null)
     </div>
 }
 else
-if(editMonitor != null)
+if (editMonitor != null)
 {
     <div class="mt-3 row">
         <div class="card">
@@ -153,7 +154,7 @@ if(editMonitor != null)
                         <label class="form-control-label">Name</label>
                         <input class="form-control" type="text" @bind-value="editMonitor.Name" />
                         <label class="form-control-label">Monitor Type</label>
-                        <select class="form-control" @bind="editMonitor.MonitoringModule">
+                        <select class="form-select" @bind="editMonitor.MonitoringModule">
                             @foreach (var m in DKControll.GetModules())
                             {
                                 <option value="@(m.Id)">@(m.DisplayName)</option>
@@ -163,7 +164,7 @@ if(editMonitor != null)
                         <input class="form-control" type="text" @bind-value="editMonitor.Target" />
                     </div>
                     <div class="btn-group-sm">
-                        <button class="btn btn-success" @onclick="UpdateMonitor">Create</button>
+                        <button class="btn btn-success" @onclick="UpdateMonitor">Update</button>
                         <button class="btn btn-danger" @onclick="CloseEditDialog">Cancle</button>
                     </div>
                 </div>
@@ -190,6 +191,9 @@ if(editMonitor != null)
 
     private void CreateMonitor()
     {
+        if (createMonitor.MonitoringModule == "none")
+            return;
+
         DKControll.AddMonitor(createMonitor);
         CloseCreateDialog();
     }
@@ -202,6 +206,7 @@ if(editMonitor != null)
     private void DeleteMonitor(Monitor monitor)
     {
         DKControll.DeleteMonitor(monitor);
+        StateHasChanged();
     }
 
     private void OpenEditDialog(Monitor monitor)
@@ -222,6 +227,6 @@ if(editMonitor != null)
 
     private void ForceUpdate()
     {
-        
+        DKControll.Update();
     }
 }

@@ -60,7 +60,7 @@ namespace DowntimeKuma
             }
         }
 
-        private static void Update()
+        public static void Update()
         {
             foreach (var mon in MonitorConfigurations)
             {
@@ -74,7 +74,7 @@ namespace DowntimeKuma
 
             foreach (var monitor in MonitorConfigurations)
             {
-                result.Add(monitor, monitor.GetHistory());
+                result.Add(monitor, monitor.GetHistory().TakeLast(20).ToArray());
             }
 
             return result;
@@ -110,12 +110,17 @@ namespace DowntimeKuma
                 select.NotifyModules = monitor.NotifyModules;
                 select.MonitoringModule = monitor.MonitoringModule;
                 select.Name = monitor.Name;
+
+                //TODO: Save to disk
             }
         }
 
         public static void DeleteMonitor(Monitor monitor)
         {
-
+            lock (MonitorConfigurations)
+            {
+                MonitorConfigurations.Remove(MonitorConfigurations.Find(x => x.Id == monitor.Id));
+            }
         }
     }
 }
