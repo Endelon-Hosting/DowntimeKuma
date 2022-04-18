@@ -38,6 +38,9 @@ namespace DowntimeKuma
                 Notifications = new();
                 MonitorConfigurations = new();
 
+                Logger.Info("Loading Monitors");
+                LoadMonitors();
+
                 Logger.Info("Starting Monitor Thread");
                 Monitoring = new(MonitorThread);
                 Monitoring.Start();
@@ -48,6 +51,14 @@ namespace DowntimeKuma
                 Logger.Error(e);
 
                 Environment.Exit(1);
+            }
+        }
+
+        private static void LoadMonitors()
+        {
+            foreach (var x in Directory.GetDirectories("data/monitors"))
+            {
+                MonitorConfigurations.Add(Monitor.FromConfig(x + "/config.json"));
             }
         }
 
@@ -98,6 +109,7 @@ namespace DowntimeKuma
             lock(MonitorConfigurations)
             {
                 MonitorConfigurations.Add(monitor);
+                monitor.UpdateConfig();
             }
         }
 
@@ -111,7 +123,7 @@ namespace DowntimeKuma
                 select.MonitoringModule = monitor.MonitoringModule;
                 select.Name = monitor.Name;
 
-                //TODO: Save to disk
+                select.UpdateConfig();
             }
         }
 
@@ -119,6 +131,7 @@ namespace DowntimeKuma
         {
             lock (MonitorConfigurations)
             {
+                monitor.DeleteData();
                 MonitorConfigurations.Remove(MonitorConfigurations.Find(x => x.Id == monitor.Id));
             }
         }

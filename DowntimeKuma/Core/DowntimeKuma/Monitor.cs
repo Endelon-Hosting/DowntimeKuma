@@ -22,18 +22,23 @@ namespace DowntimeKuma.Core.DowntimeKuma
             return DKControll.Monitors.Find(x => x.Id == MonitoringModule);
         }
 
-        public string Now()
+        private string Now()
         {
             var n = DateTime.Now;
             return $"{n.Day}.{n.Month}.{n.Year}";
         }
 
-        public string DailyStatsPath()
+        private string DailyStatsPath()
         {
-            return $"data/monitors/{Name.ToLower().Replace(" ", "_")}-{MonitoringModule.ToLower().Replace(" ", "_")}/history/{Now()}.json";
+            return $"{PathX()}history/{Now()}.json.gz";
         }
 
-        public string XD(string fn)
+        private string PathX()
+        {
+            return $"data/monitors/{Id.ToString().ToLower().Replace(" ", "_")}-{MonitoringModule.ToLower().Replace(" ", "_")}/";
+        }
+
+        private string XD(string fn)
         {
             var dir = Path.GetDirectoryName(fn);
             if(!Directory.Exists(dir))
@@ -41,7 +46,7 @@ namespace DowntimeKuma.Core.DowntimeKuma
             return fn;
         }
 
-        public string JX(string fn, string m = "{}")
+        private string JX(string fn, string m = "{}")
         {
             if (!File.Exists(fn))
                 File.WriteAllBytes(fn, Compress(Encoding.UTF8.GetBytes(m)));
@@ -79,6 +84,23 @@ namespace DowntimeKuma.Core.DowntimeKuma
                 dstream.CopyTo(output);
             }
             return output.ToArray();
+        }
+
+        public void UpdateConfig()
+        {
+            File.WriteAllText(PathX() + "config.json", JsonConvert.SerializeObject(this, Formatting.Indented));
+        }
+
+        public static Monitor FromConfig(string fn)
+        {
+            var o = JsonConvert.DeserializeObject<Monitor>(File.ReadAllText(fn));
+            _id++;
+            return o;
+        }
+
+        public void DeleteData()
+        {
+            Directory.Delete(PathX(), true);
         }
     }
 }
