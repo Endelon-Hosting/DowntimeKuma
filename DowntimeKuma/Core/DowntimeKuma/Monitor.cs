@@ -55,7 +55,7 @@ namespace DowntimeKuma.Core.DowntimeKuma
 
         public void AddToHistory(MonitorData d)
         {
-            var x = JsonConvert.DeserializeObject<MonitorData[]>(File.ReadAllText(JX(XD(DailyStatsPath()), "[]"))).ToList();
+            var x = JsonConvert.DeserializeObject<MonitorData[]>(Encoding.UTF8.GetString(Decompress(File.ReadAllBytes(JX(XD(DailyStatsPath()), "[]"))))).ToList();
             x.Add(d);
             File.WriteAllBytes(DailyStatsPath(), Compress(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(x.ToArray(), Formatting.Indented))));
         }
