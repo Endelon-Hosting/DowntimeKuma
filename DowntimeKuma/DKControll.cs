@@ -36,6 +36,7 @@ namespace DowntimeKuma
                 Monitors = new();
                 Monitors.Add(new PingModule());
                 Monitors.Add(new HttpModule());
+                Monitors.Add(new MinecraftModule());
                 Notifications = new();
                 MonitorConfigurations = new();
 
