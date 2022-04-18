@@ -177,6 +177,19 @@
             </div>
         </div>
     }
+
+    <div class="mt-3 row">
+        <div class="card">
+            <div class="card-body">
+                <div class="form-group">
+                    <input class="form-control w-25" type="text" @bind-value="newPasswd" />
+                    <button class="mt-3 btn btn-secondary" @onclick="ChangePasswd">Change password</button>
+                    <input class="form-control w-25" type="text" @bind-value="newName" />
+                    <button class="mt-3 btn btn-secondary" @onclick="ChangeName">Change name</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </IsAuth>
 <NonAuth>
     <div class="row">
@@ -194,6 +207,9 @@
 {
     private Monitor createMonitor;
     private Monitor editMonitor;
+
+    private string newPasswd = "";
+    private string newName = "";
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -257,10 +273,26 @@
 
     private void Logout()
     {
-        if(s3.HasSession)
+        if (s3.HasSession)
         {
             S3Storage.Clear(s3.Token);
             nm.NavigateTo("/login", true);
         }
+    }
+
+    private void ChangePasswd()
+    {
+        DKControll.Configuration.Password = newPasswd;
+        DKControll.SaveConfig();
+
+        nm.NavigateTo(nm.Uri, true);
+    }
+
+    private void ChangeName()
+    {
+        DKControll.Configuration.Label = newName;
+        DKControll.SaveConfig();
+
+        nm.NavigateTo(nm.Uri, true);
     }
 }
