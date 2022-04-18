@@ -55,11 +55,16 @@ namespace DowntimeKuma
         {
             while (true)
             {
-                foreach (var mon in MonitorConfigurations)
-                {
-                    mon.AddToHistory(mon.GetMonitoringService().Monitor(mon));
-                }
+                Update();
                 Thread.Sleep(1000 * 60);
+            }
+        }
+
+        private static void Update()
+        {
+            foreach (var mon in MonitorConfigurations)
+            {
+                mon.AddToHistory(mon.GetMonitoringService().Monitor(mon));
             }
         }
 
