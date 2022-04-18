@@ -22,6 +22,7 @@ namespace DowntimeKuma
         public static ModuleCollection<AbstractNotifyModule> Notifications { get; set; }
         public static List<Monitor> MonitorConfigurations { get; set; }
         public static Thread Monitoring { get; set; } = null;
+        public static event Action StateHasChanged;
 
         public static void Start()
         {
@@ -70,6 +71,7 @@ namespace DowntimeKuma
             while (true)
             {
                 Update();
+                StateHasChanged?.Invoke();
                 Thread.Sleep(1000 * 60);
             }
         }
