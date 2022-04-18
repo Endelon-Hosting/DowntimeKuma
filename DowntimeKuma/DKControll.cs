@@ -57,6 +57,7 @@ namespace DowntimeKuma
 
         private static void LoadMonitors()
         {
+            Directory.CreateDirectory("data/monitors");
             foreach (var x in Directory.GetDirectories("data/monitors"))
             {
                 MonitorConfigurations.Add(Monitor.FromConfig(x + "/config.json"));
