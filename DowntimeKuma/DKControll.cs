@@ -35,6 +35,7 @@ namespace DowntimeKuma
                 Logger.Info("Registering modules");
                 Monitors = new();
                 Monitors.Add(new PingModule());
+                Monitors.Add(new HttpModule());
                 Notifications = new();
                 MonitorConfigurations = new();
 
