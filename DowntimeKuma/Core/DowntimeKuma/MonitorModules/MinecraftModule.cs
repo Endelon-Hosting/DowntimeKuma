@@ -24,8 +24,7 @@ namespace DowntimeKuma.Core.DowntimeKuma.MonitorModules
 
                 var mc = new MineStat(host, port);
 
-#pragma warning disable CS0612 // Typ oder Element ist veraltet
-                if (mc.IsServerUp())
+                if (mc.ServerUp)
                 {
                     return new MonitorData()
                     {
@@ -41,7 +40,6 @@ namespace DowntimeKuma.Core.DowntimeKuma.MonitorModules
                         Success = false
                     };
                 }
-#pragma warning restore CS0612 // Typ oder Element ist veraltet
             }
             catch(Exception e)
             {
